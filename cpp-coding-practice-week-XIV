@@ -1,1 +1,1307 @@
-等下传
+//10.1
+#include"pch.h"
+#include<iostream>
+#include<string.h>
+#include<cmath>
+using namespace std;
+
+//类体外定义成员函数
+//类体外定义的成员函数不能在主函数里面写。函数里面不能有函数定义
+class Person1
+{
+	char name[20];
+	char sex;
+	int age;
+public:
+	void setdata(char[], char, int); //类体内进行成员函数声明
+	void getname(char*);
+	char getsex();
+	int getage();
+};
+void Person1::setdata(char na[], char s, int a) //类体外进行成员函数声明
+{
+	strcpy_s(name, na);
+	sex = s;
+	age = a;
+}
+void Person1::getname(char *na)
+{
+	strcpy_s(na, 20, name);
+}
+char Person1::getsex()
+{
+	return sex;
+}
+int Person1::getage()
+{
+	return age;
+}
+
+//长方形类CRect
+class CRect
+{
+private:
+	int left, top, right, bottom;
+public:
+	void setcoord(int, int, int, int);
+	void getcoord(int *L, int *T, int *R, int *B)
+	{
+		*L = left, *T = top, *R = right, *B = bottom;
+	}
+	void print(void)
+	{
+		cout << "Area = " << abs(right - left) * abs(bottom - top) << endl;
+	}
+};
+void CRect::setcoord(int L, int T, int R, int B)
+{
+	left = L, top = T, right = R, bottom = B;
+}
+
+int main(void)
+{
+
+	//对象数值属性：静态属性 对象可进行的动作：动态属性
+	//面向对象方法：把对象可进行的动作也加入对对象的描述中，这样的描述称为类。类是对具有相同的属性和行为的一个或多个对象的描述
+
+	//10.1.2 类和对象的定义格式
+	//关键字private、protected、public表示类的成员的访问权限，在类定义时出现的先后顺序可以任意、可以任选、可以出现多次。
+	//定义格式中private可省略
+
+	//定义一个描述人的类
+	class Person
+	{
+	private:
+		char name[20];
+		char sex;
+		int age;
+	public:
+		void setdata(char na[], char s, int a)
+		{
+			strcpy_s(name, na); //直接访问name
+			sex = s; //直接访问sex
+			age = a; //直接访问age
+		}
+		void getname(char *na) //void
+		{
+			strcpy_s(na, 20, name); //注意写法 //_s 且有指针，所以三个参数
+		}
+		char getsex() //char
+		{
+			return sex; //注意写法
+		}
+		int getage() //int
+		{
+			return age;
+		}
+	};
+
+	//类 类型的变量在面向对象编程部分常称为对象，也称为类的实例
+	//对象定义格式
+	Person a, b;
+	Person *pa, *pb, *px, x[10];
+	pa = &a, pb = &b, pa = x;
+
+	//对象成员的访问
+	//类内：在类的成员函数中 类外：类的成员函数之外
+	/*
+	private：类内可直接访问， 类外不可直接访问
+	protected：可，不可
+	public：可， 可*/
+
+	//a.name, a.sex, a.age pa->name非法 a.setdata(), a.getname(), a.getsex(), a.getage(), pa->setdata合法
+
+	/*
+	class Person
+	{
+	public:
+		char name[20];
+		char sex;
+		int age;
+		......
+	};
+	此时上述不合法的就变为合法的
+	*/
+
+	//类的定义实现面向对象程序设计方法第一个特性即封装性，即将对象的静态和动态属性封装成一个类，类中的数据成员通常是私有的。
+
+	//类的成员函数也称为类的方法
+	//类中的私有数据成员在类外不能直接访问，而用户有时需要存取类中私有成员的值，那么类应该提供存取私有数据成员的方法，这些方法一般定义为公有成员函数
+	//在类体外定义成员函数必须在函数名前加类名限定，指定函数的所属类，“Person1::”表示该函数是Person1类的成员函数
+
+	//测试Person类
+	Person a1, *pa1;
+	char name[20];
+	char char1[] = "Cheng";
+
+	a1.setdata(char1, 'F', 20);
+	a1.getname(name);
+	cout << "name:" << name << '\t'
+		<< "sex:" << a1.getsex() << '\t'
+		<< "age:" << a1.getage() << endl;
+
+	pa1 = &a1;
+	pa1->setdata(char1, 'F', 20);
+	pa1->getname(name);
+	cout << "name:" << name << '\t'
+		<< "sex:" << pa1->getsex() << '\t'
+		<< "age:" << pa1->getage() << endl;
+
+	//CRect
+	CRect r1, r2;
+	int a2, b2, c2, d2;
+	int a3, b3, c3, d3;
+	r1.setcoord(100, 300, 50, 200);
+	r1.getcoord(&a2, &b2, &c2, &d2);
+	cout << "left=" << a2 << '\t' << "top=" << b2 << endl;
+	cout << "right=" << c2 << '\t' << "bottom" << d2 << endl;
+	r1.print();
+	r2 = r1;
+	r2.print(); //对象可整体赋值
+	r2.setcoord(300, 100, 200, 50);
+	r2.getcoord(&a3, &b3, &c3, &d3);
+	cout << "left=" << a3 << '\t' << "top=" << b3 << endl;
+	cout << "right=" << c3 << '\t' << "bottom" << d3 << endl;
+
+	//类和对象具有封装性，可实现信息的隐蔽性。隐蔽性指类的私有成员和保护成员被隐藏在类里，只有在类内才可以直接访问，在类外不可直接访问，即类外不可见，从而达到保护数据成员的目的
+
+	//对象的储存空间
+	/*
+	所有对象的成员函数的代码是相同的，因此系统将成员函数的储存空间处理成该类的所有对象共享同一代码空间。
+	因此一个对象的储存空间是对象自身数据成员的储存空间
+	
+	一般分配的储存空间的字节数为4的整数倍*/
+
+	//当使用new和delete运算符动态建立和撤销对象时，对象储存空间的分配和撤销是在new和delete执行时刻完成的
+	Person *p11, *p12;
+	p11 = new Person;
+	p12 = new Person[10];
+
+	delete p11;
+	delete[] p12;
+
+	//自身类的指针或引用可以作为类的成员，自身类的对象不能
+	class Date
+	{
+		int year, month, day;
+	};
+	class Person2
+	{
+		char name[20];
+		char sex;
+		int age;
+		Date day1, day2;
+		Date *pd;
+		//Person2 a, b; 错误
+		Person2 *pa;
+		Person2 &r;
+	};
+
+	//当定义一个类时使用了另一个类，而另一个类的定义在当前类的后面，则必须对另一个类作引用性说明
+	class Date1; //对Date类的引用性说明
+	class Person3
+	{
+		Date day1, day2;
+		Date *pd;
+	};
+	class Date1
+	{
+		;
+	};
+
+	//定义类的对象
+	//1)
+	class class1
+	{
+		;
+	};
+	class1 c11, c12, c13;
+	//2)
+	class class2
+	{
+		;
+	}c21, c22;
+	//3)
+	class
+	{
+		;
+	}c31, c32;
+}
+
+//10.2
+#include"pch.h"
+#include<iostream>
+#include<string.h>
+using namespace std;
+
+class Complex
+{
+	double Real, Image;
+public:
+	Complex(double x = 0, double y = 0)
+	{
+		Real = x; Image = y;
+		Show();
+		cout << "调用了构造函数\n";
+	}
+	~Complex()
+	{
+		Show();
+		cout << "调用了析构函数\n";
+	}
+	void Show()
+	{
+		cout << '(' << Real << ',' << Image << ')';
+	}
+};
+
+class Sample
+{
+	int x, y;
+public:
+	Sample(int a = 0, int b = 0)
+	{
+		x = a; y = b;
+		cout << x << ',' << y << " default constructor_sample\n";
+	}
+	Sample(Sample &s)
+	{
+		x = s.x; y = s.y;
+		cout << x << ',' << y << " copy constructor_sample\n";
+	}
+	~Sample()
+	{
+		cout << x << ',' << y << " destructor\n";
+	}
+	void add()
+	{
+		x += 10; y += 10;
+	}
+};
+
+class student
+{
+	char num[10];
+	char *name;
+	int score;
+public:
+	student(char *nump = NULL, char *namep = NULL, int score = 0)
+	{
+		if (nump)
+			strcpy_s(num, 10, nump);
+		else
+			strcpy_s(num, 10, "");
+		if (namep)
+		{
+			name = new char[strlen(namep) + 1]; //对姓名指针虽然分配了字符指针空间，但并没有分配它指向的用于储存字符串的空间。由于对象自身的姓名成员只是字符指针，没有字符串的储存空间，因此必须在构造函数中动态申请空间用于储存姓名字符串
+			strcpy_s(name, strlen(namep) + 1, namep);
+		}
+		else
+			name = NULL;
+		student::score = score;
+		cout << "constructor_student called!\n";
+	}
+	~student()
+	{
+		if (name) delete[] name;
+		cout << "destructor_student called!\n";
+	}
+	void show()
+	{
+		cout << num << '\t' << name << '\t' << score << endl;
+	}
+
+};
+
+class Date2
+{
+	int Year, Month, Day;
+public:
+	Date2(int y = 2000, int m = 1, int d = 1)
+	{
+		Year = y; Month = m; Day = d;
+		cout << "constructor_Date2: ";
+		ShowDate(); //类里面，即使函数在之后定义也不需要声明再使用
+	}
+	void ShowDate()
+	{
+		cout << Year << '.' << Month << '.' << Day << endl;
+	}
+	~Date2()
+	{
+		cout << "destructor_Date2: ";
+		ShowDate();
+	}
+};
+
+Date2 d4(2016, 4, 4);
+
+void fun()
+{
+	cout << "进入fun()函数！\n";
+	static Date2 d2(2016, 2, 2);
+	Date2 d3(2016, 3, 3);
+	cout << "退出fun()函数!\n";
+}
+
+class date1
+{
+	int Year, Month, Day;
+public:
+	void Showdate()
+	{
+		cout << Year << '.' << Month << '.' << Day << endl;
+	}
+};
+
+class Point
+{
+	int x, y;
+public:
+	Point(int a = 0, int b = 0)
+	{
+		x = a;
+		y = b;
+	}
+	Point(Point &p);
+	~Point()
+	{
+		cout << x << ',' << y << " destructor_Point called.\n";
+	}
+	void Show()
+	{
+		cout << "Point: " << x << ',' << y << endl;
+	}
+	int Getx()
+	{
+		return x;
+	}
+	int Gety()
+	{
+		return y;
+	}
+};
+Point::Point(Point &p)
+{		
+	x = p.x; y = p.y;
+	cout << x << ',' << y << " copy-initialization constructor_Point called.\n";
+	/*
+	封装是编译期的概念，是针对类型而非对象的，在类的成员函数中可以访问同类型实例对象的私有成员变量．
+	总结：C++的访问修饰符的作用是以类为单位，而不是以对象为单位。
+　　通俗的讲，同类的对象间可以“互相访问”对方的数据成员，只不过访问途径不是直接访问.
+　　步骤是：通过一个对象调用其public成员函数，此成员函数可以访问到自己的或者同类其他对象的public/private/protected数据成员和成员函数(类的所有对象共用)，
+    而且还需要指明是哪个对象的数据成员(调用函数的对象自己的成员不用指明，因为有this指针；其他对象的数据成员可以通过引用或指针间接指明)
+	*/
+}
+
+class student1
+{
+	char *Name;
+	int Age;
+public:
+	student1(char *namep, int age)
+	{
+		Age = age;
+		if (namep)
+		{
+			Name = new char[strlen(namep) + 1];
+			strcpy_s(Name, strlen(namep) + 1, namep);
+		}
+		else Name = NULL;
+	}
+	~student1()
+	{
+		if (Name) delete[] Name;
+	}
+	void Show()
+	{
+		cout << Name << ',' << Age << endl;
+	}
+};
+
+Point move(Point p, int xoffset, int yoffset)
+{
+	int x = p.Getx() + xoffset, y = p.Gety() + yoffset;
+	Point t(x, y);
+	return t;
+}
+
+int main(void)
+{
+	/*
+	结构体和类的唯一区别是，结构体的成员的默认访问权限是公有的，而类中成员的默认访问权限是私有的，其他情况完全相同，如在结构体中也可以定义成员函数
+	由于结构体成员的缺省访问权限是公有的，所以在定义结构体变量的同时可以对其初始化。
+	对于类，如果其成员是公有的才能在定义对象时用上述形式进行初始化
+	*/
+
+	//构造函数和析构函数
+	//构造函数：创建对象时（包括临时对象）由系统自动调用，用给定的值对数据成员初始化
+	//析构函数：系统在撤销对象时，自动调用，做一些清理工作
+
+	//构造函数
+	//定义多个构造函数称为构造函数的重载
+	/*
+	classname(args)
+	{}
+	
+	classname::classname(args)
+	{}
+	classname::  类名限定
+	*/
+
+	class Date
+	{
+		int Year, Month, Day;
+	public:
+		Date()
+		{ 
+			Year = 2016;
+			Month = 5;
+			Day = 1;
+		}
+		Date(int y)
+		{
+			Year = y;
+			Month = 5;
+			Day = 1;
+		}
+		Date(int y, int m)
+		{
+			Year = y;
+			Month = m;
+			Day = 1;
+		}
+		Date(int y, int m, int d)
+		{
+			Year = y;
+			Month = m;
+			Day = d;
+		}
+
+		void showdate()
+		{
+			cout << Year << '.' << Month << '.' << Day << endl;
+		}
+	};
+
+
+	Date d1; //自动调用构造函数
+	Date d2(2016);
+	Date d3(2016, 10);
+	Date d4(2016, 10, 6);
+	// Date d5();错误
+	d1.showdate();
+	d2.showdate();
+	d3.showdate();
+	d4.showdate();
+
+	//定义带缺省值的构造函数
+	class Date1
+	{
+		int Year, Month, Day;
+	public:
+		Date1(int y = 2016, int m = 5, int d = 1)
+		{
+			Year = y;
+			Month = m;
+			Day = d;
+		}
+		void showdate()
+		{
+			cout << Year << '.' << Month << '.' << Day << endl;
+		}
+	};
+	Date1 d5; //自动调用构造函数
+	Date1 d6(2016);
+	Date1 d7(2016, 10);
+	Date1 d8(2016, 10, 6);
+	d5.showdate();
+	d6.showdate();
+	d7.showdate();
+	d8.showdate();
+
+	/*
+	构造函数特点：
+	函数名与类名相同，且不给出返回值类型
+	构造函数是成员函数
+	可以重载
+	一般定义为公有成员函数
+	不可以通过对象名调用 如d1.Date(2009)是非法的
+	可以直接通过构造函数名调用构造函数创建对象
+	*/
+	d1 = Date(2018);
+	//表示等号右边创建了一个Date类临时对象，并将它赋值给对象d1
+	Date d[4] = { Date(), Date(2016), Date(2016, 10), Date(2016, 10, 6) }; //Date()不能省去括号
+
+	//析构函数
+	/*
+	~classname() //析构函数名为~classname
+	{}
+	
+	classname::~classname()
+	{}
+	
+	*/
+
+	//本例析构函数在主函数结束时调用
+	char num1[] = "040120518";
+	char name1[] = "George";
+	student a(num1, name1, 80);
+	a.show();
+
+	/*
+	析构函数特点：
+	析构函数是成员函数
+	一般定义为公有成员函数
+	没参数，不给返回值类型。一个类只能定义一个，即不允许重载
+	系统自动调用，但可以通过对象显式调用 a.~student()正确 但要慎用，因为系统可能还会自动调用一次*/
+
+	/*
+	下面两种情况，析构函数会被调用
+	1 当对象是系统自动创建的，则在对象的作用域结束时，系统自动调用析构函数。在撤销对象时，系统先自动调用析构函数，再撤销该对象本身的储存空间
+	若定义一个全局对象或局部静态对象，则在程序结束时（main()函数结束时），该对象的析构函数会被自动调用
+	2 若一个对象是使用new运算符动态创建的，则在使用delete运算符撤销它时自动调用析构函数
+	*/
+
+	//调用构造函数和析构函数的时机
+	//对象分全局对象、局部动态对象和局部静态对象
+	/*
+	全局对象：程序开始执行时（main函数开始执行时）创建对象，系统自动调用构造函数；程序结束时，系统在撤销对象前自动调用析构函数
+	局部动态对象：程序执行进入作用域，定义对象处系统自动创建对象，调用构造函数；退出作用域时，系统撤销对象前调用析构函数
+	局部静态对象：程序执行流程首次到达定义对象处，系统自动调用构造函数；程序结束时，系统撤销对象前调用析构函数
+	动态申请的对象：使用new创建对象时，系统自动调用构造函数；使用delete撤销对象时，系统自动调用析构函数*/
+
+	cout << "进入main()函数！\n";
+	Date2 d12(2016, 1, 1);
+	fun();
+	fun();
+	cout << "退出main()函数！\n";
+	//主函数结束时，先撤销主函数中局部对象，再撤销程序中所有静态对象。所有静态对象的撤销顺序（即调用析构函数的顺序）和创建顺序（调用构造函数的顺序）相反
+
+	//缺省构造函数和缺省析构函数
+	//缺省构造函数也称为默认构造函数，通常是指在定义对象时，若不给初值（即构造函数的实参），则系统使用默认值初始化数据成员。
+	/*除了定义时在括号写默认值，构造函数还可无形参，在函数体中直接使用默认值给数据成员赋值。如：
+	Date()
+	{ Year = 2000; Month = 1; Day = 1; }
+
+	缺省构造函数两种形式：所有参数均带缺省值的和没参数的
+	对于这两种形式，一个类只能具备一个
+	*/
+
+	/*定义类时，如果编程者没有定义构造函数，则编译器自动生成一个不带参数的构造函数.其形式为
+	Classname::Classname()
+	{}
+	*/
+
+	date1 d11;
+	d11.Showdate(); //由于构造函数中没有做任何操作，因此对象的三个数据成员没有被初始化，它们的值不确定（虽然date1在主函数外面定义）
+
+	/*编程者不定义任何构造函数系统才自动生成缺省构造函数*/
+
+	//缺省析构函数
+	/*定义类时，如果编程者没有定义构造函数，则编译器自动生成一个缺省构造函数，格式：
+	ClassName::~ClassName()
+	{}
+
+	撤销对象时，若不需要做任何结束工作，可不显示定义析构函数
+	当类中有动态申请的储存空间时，必须显式定义析构函数，以撤销动态储存空间。
+	*/
+
+	//拷贝构造函数和缺省拷贝构造函数
+	/*
+	功能：用一个已知对象来初始化一个新创建的同类对象
+	类体外定义格式： ClassName::ClassName([const] ClassName & Obj) //注意形参是实参对象的[常]引用
+	{}
+	在类体内定义，把类名限定去掉即可
+	const是关键字，如果给出，表示形参Obj在拷贝构造函数的函数体中是对象常量（常对象），不能被修改，以保护实参对象
+
+	*/
+
+	Point p1(6, 8), p2(4, 7);
+	Point p3(p1); //这个和下面的都可以
+	Point p4 = p2;
+	p1.Show();
+	p2.Show();
+	p3.Show();
+	p4.Show();
+	/*程序结束时调用析构函数，按p4/p3/p2/p1顺序撤销对象，与定义顺序反向*/
+
+	/*拷贝构造函数特点：
+	没返回值
+	只有一个本类对象引用的参数，一般是常引用
+	每个类一定有一个，如果没显式定义，系统自动产生缺省拷贝构造函数
+	上例，如果不显式定义，系统自动产生缺省拷贝构造函数是：
+	Point::Point(const Point &p)
+	{
+		x = p.x; y = p.y; //拷贝→逐个赋值
+	}
+
+	如果类的数据成员不需要动态申请空间，编程者不需要定义拷贝构造函数，使用系统自动产生的即可，如果类的数据成员需要动态申请储存空间，则必须定义拷贝构造函数，否则出错
+	*/
+
+	/*
+	char stu1[] = "George";
+	student1 stu_a(stu1, 20);
+	student1 stu_b = stu_a;
+	stu_b.Show();
+
+	缺省拷贝构造函数只负责对象自身的数据成员的拷贝工作
+
+	若拷贝构造函数的工作只是简单地把数据成员的自身的值依次赋值给新创建对象的数据成员，称为浅拷贝 若没有动态申请的空间，则使用系统自动生成的浅拷贝构造函数即可
+	若一个对象自身的数据成员是指针，而指针指向了动态申请的储存空间，则使用缺省拷贝构造函数就不行了，需要定义深拷贝构造函数，除了将对象自身成员进行拷贝外，还需要完成动态空间的拷贝
+	如上例增加深拷贝构造函数
+	Student::Student(const Student &s)
+	{
+		Age = s.Age;
+		if (s.Name)
+		{
+			Name = new char[strlen(s.Name)+1];
+			strcpy(Name, s.Name);
+		}
+		else Name = NULL;
+	}
+	必须定义拷贝构造函数的情况：
+	1）产生新对象时只需拷贝同类型对象的部分数据成员
+	2）对象成员有指针，指针指向动态申请的空间，此时需要深拷贝
+	*/
+
+	//拷贝构造函数的调用时机 对象作函数参数、函数返回值时拷贝构造函数的调用
+	Point p11(6, 8), p12;
+	p12 = move(p11, 2, 4); //第一个参数传递是Point p = p11，即用实参p11初始化形参p，p是move函数内部新创建的局部动态对象，此时调用拷贝构造函数
+	p12 = p11;
+	/*
+	当move()函数执行结束，系统自动创建一个内存临时对象，用对象t初始化该内存临时对象。假定该内存临时对象是temp，相当于Point temp = t
+	此时调用了拷贝构造函数
+	函数返回对象时，系统的处理过程为：首先在内存中建立临时对象，暂时存放返回对象的值；接着，撤销函数move()中的局部动态对象t和p
+	当执行流程返回主函数后，程序中p12 = move(p11, 2, 4)将temp的值赋给对象p12,。赋值结束后，撤销临时对象temp
+	
+	只有产生新对象时才调用拷贝构造函数。赋值运算不产生新对象，所以不会调用拷贝构造函数
+	
+	系统自动调用拷贝构造函数的情况：
+	1 明确表示由一个对象初始化另一个对象时
+	2 对象作为函数参数时，系统处理成用实参对象初始化形参对象
+	3 当函数返回对象时，系统处理成用返回值对象初始化内存临时对象*/
+
+	//构造函数、析构函数和拷贝构造函数的调用时机
+	Sample sam1(1, 2), sam2(3, 4), sam3(5, 6);
+	Sample arr[3] = { sam1, sam2, sam3 }; //这里调用了拷贝构造函数 用已有的三个对象初始化对象数组的三个元素，调用了三次拷贝构造函数
+	Sample *ptr = arr;
+	for (int i = 0; i < 3; i++, ptr++)
+		ptr->add();
+	cout << "main end\n";
+
+	//利用构造函数进行类型转换
+	//按照c++类型转换原则，一般将赋值号右边表达式的值转换成与左边变量类型一致的量，然后赋值
+	//一个类定义完成后，就产生了一个新的数据类型。新数据类型的变量（对象）与已有数据类型的变量可以相互赋值
+	/*
+	Complex c;
+	double x;
+	c = x;
+	x = c;*/
+
+	Complex co1(3, 5), co2; //co2定义时也调用了构造函数（缺省）
+	co1 = 8.0; //处理成co1 = Complex(8.0)，在等号右边调用构造函数产生临时复数对象，该对象实部8.0，虚部0.0。将该临时对象的值赋值给co1后撤销临时对象
+	co2 = Complex(9.0, 9.0); //处理和上一行一样
+}
+
+//10.3
+#include"pch.h"
+#include<iostream>
+using namespace std;
+
+class Complex
+{
+	double Real, Image;
+public:
+	void setRI(double r, double i) //隐含的内联函数
+	{
+		Real = r; Image = i;
+	};
+	void getRI(double &, double&); //类体内声明函数
+	void Show();
+};
+inline void Complex::getRI(double &r, double &i) //get两个值 //显式定义的内联函数
+{
+	r = Real; i = Image;
+}
+inline void Complex::Show() //显式定义的内联函数
+{
+	cout << '(' << Real << ',' << Image << ')' << endl;
+}
+
+int main(void)
+{
+	//10.3成员函数的特性
+	/*类体内定义的成员函数是内联函数，类体外定义的函数是外联函数，在类体外也可以定义内联函数，方法是在函数定义的首部增加inline关键字*/
+	Complex c;
+	double r, i;
+	c.setRI(5, 6);
+	c.getRI(r, i);
+	cout << '(' << r << ',' << i << ')' << endl;
+	c.Show();
+
+	/*c++处理外联函数的调用过程是：先保护主调函数的执行现场，然后流程转入被调函数的函数体，执行完毕再转回到函数调用处，恢复现场，继续执行主调函数后面的语句
+	处理内联函数的方法：编译时将函数调用替换成内联函数的代码，因此程序执行时没有发生实际的函数调用，减少了程序执行的时间开销，提高了程序的执行效率，代价是程序的总代吗
+	空间加大。因此一般将函数体较短，需频繁调用的函数定义成内联函数。这样，函数代码空间不会膨胀得很厉害，同时程序的执行效率也会提高
+	
+	内联函数一定要在调用之前定义，并且内联函数不能递归调用
+	
+	内联函数在类体外的定义也称为内联函数的实现，内联函数的实现必须与其所属类的定义放在同一个文件中，否则编译时无法进行内联函数的替换*/
+
+	//成员函数的重载
+	/*
+	int &(unsigned n)
+	int &是一种数据类型，表示整型量的引用，返回引用目的是在主调函数修改该元素
+
+	若函数定义中参数是unsigned类型，实参不一定要写成3u之类形式
+	但若有 int Elem(int n), int Elem(unsigned n)情况，实参要带u，以告诉程序调用哪个重载
+	若返回unsigned int类型，写成 unsigned func1(args)
+
+	若两个函数重载参数类型和数量一样但功能不同，可能可将其中一个函数的参数类型改成unsigned，比如数组下标。
+	
+	int func(void)和int func()一样
+	*/
+}
+
+//10.4
+#include"pch.h"
+#include<iostream>
+#include<cmath>
+using namespace std;
+class Point 
+{
+	int x, y;
+public:
+	Point(int a = 0, int b = 0)
+	{
+		x = a; y = b;
+		cout << x << ',' << y << " 构造 Point\n";
+	}
+	int Getx()
+	{
+		return x;
+	}
+	int Gety()
+	{
+		return y;
+	}
+	~Point()
+	{
+		cout << x << ',' << y << " 析构 Point\n";
+	}
+};
+class Line
+{
+	int width, color;
+	Point p1, p2; //这两个对象成员的初始化工作是在Line类的构造函数中（通过Point里的构造函数）完成的
+public:
+	Line(int x1, int y1, int x2, int y2, int w, int c):p1(x1, y1), p2(x2, y2)
+	{
+		width = w; color = c;
+		cout << width << ',' << color << " 构造 Line\n";
+	}
+	double LineLen()
+	{
+		double len;
+		int x1, x2, y1, y2;
+		x1 = p1.Getx(); y1 = p1.Gety();
+		x2 = p2.Getx(); y2 = p2.Gety();
+		len = sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+		return len;
+	}
+	~Line()
+		{
+			cout << width << ',' << color << " 析构 Line\n";
+		}
+};
+
+int main(void)
+{
+	//在定义一个新类时，可以把一个已定义类的对象作为该类的成员，称为对象成员。产生新定义类的对象时，需对它的对象成员进行初始化，且只能通过其对象成员的构造函数来实现
+	Line Li(0, 0, 1, 1, 3, 6);
+	cout << "长度=" << Li.LineLen() << endl;
+	//先调用对象成员的构造函数，再调用类自身的构造函数。析构函数的调用顺序和构造函数的调用顺序相反。（先类自身析构函数再对象成员析构函数）
+	/*
+	class ClassName
+	{
+		ClassName_1 c1;
+		ClassName_2 c2;
+		......
+		ClassName_n cn;
+	public:
+		ClassName(args):c1(arg_1), c2(arg_2),... ,cn(arg_n) //c1(arg_1), c2(arg_2),... ,cn(arg_n)称为构造函数的成员初始化列表，arg_1, arg_2...依次是c1， c2...的实参列表
+		{......}
+		......
+
+		args是形参，有类型说明，arg_1等是实参，不需要类型说明，它们可以是来自于args的变量，也可是常量或表达式等。
+		调用对象成员构造函数的顺序与书写在成员初始化列表中的顺序无关，而与对象成员的定义顺序有关，先定义的先调用。
+	};
+	*/
+}
+
+//10.5
+#include"pch.h"
+#include<iostream>
+using namespace std;
+
+class Complex
+{
+	double Real, Image;
+public:
+	void setRI(double r, double i) //隐含的内联函数
+	{
+		Real = r; Image = i;
+	};
+	void getRI(double &, double&); //类体内声明函数
+	void Show();
+};
+inline void Complex::getRI(double &r, double &i) //get两个值 //显式定义的内联函数
+{
+	r = Real; i = Image;
+}
+inline void Complex::Show() //显式定义的内联函数
+{
+	cout << '(' << Real << ',' << Image << ')' << endl;
+}
+
+int main(void)
+{
+	//10.3成员函数的特性
+	/*类体内定义的成员函数是内联函数，类体外定义的函数是外联函数，在类体外也可以定义内联函数，方法是在函数定义的首部增加inline关键字*/
+	Complex c;
+	double r, i;
+	c.setRI(5, 6);
+	c.getRI(r, i);
+	cout << '(' << r << ',' << i << ')' << endl;
+	c.Show();
+
+	/*c++处理外联函数的调用过程是：先保护主调函数的执行现场，然后流程转入被调函数的函数体，执行完毕再转回到函数调用处，恢复现场，继续执行主调函数后面的语句
+	处理内联函数的方法：编译时将函数调用替换成内联函数的代码，因此程序执行时没有发生实际的函数调用，减少了程序执行的时间开销，提高了程序的执行效率，代价是程序的总代吗
+	空间加大。因此一般将函数体较短，需频繁调用的函数定义成内联函数。这样，函数代码空间不会膨胀得很厉害，同时程序的执行效率也会提高
+	
+	内联函数一定要在调用之前定义，并且内联函数不能递归调用
+	
+	内联函数在类体外的定义也称为内联函数的实现，内联函数的实现必须与其所属类的定义放在同一个文件中，否则编译时无法进行内联函数的替换*/
+
+	//成员函数的重载
+	/*
+	int &(unsigned n)
+	int &是一种数据类型，表示整型量的引用，返回引用目的是在主调函数修改该元素
+
+	若函数定义中参数是unsigned类型，实参不一定要写成3u之类形式
+	但若有 int Elem(int n), int Elem(unsigned n)情况，实参要带u，以告诉程序调用哪个重载
+	若返回unsigned int类型，写成 unsigned func1(args)
+
+	若两个函数重载参数类型和数量一样但功能不同，可能可将其中一个函数的参数类型改成unsigned，比如数组下标。
+	
+	int func(void)和int func()一样
+	*/
+}
+
+//sy9_1
+#include"pch.h"
+#include<iostream>
+using namespace std;
+
+class CRect
+{
+private:
+	int left, top, right, bottom;
+public:
+	void setcoord(int, int, int, int);
+	void getcoord(int *L, int *T, int *R, int *B)
+	{
+		*L = left; *T = top; *R = right; *B = bottom;
+	}
+	void print(void)
+	{
+		cout << "Area = " << abs(right - left) * abs(bottom - top) << endl;
+	}
+};
+void CRect::setcoord(int L, int T, int R, int B)
+{
+	left = L; top = T; right = R; bottom = B;
+}
+
+
+int main(void)
+{
+	CRect r1, r2;
+	int a, b, c, d;
+	r1.setcoord(100, 300, 50, 200);
+	r1.getcoord(&a, &b, &c, &d);
+	cout << "left=" << a << '\t' << "top=" << b << endl;
+	cout << "right=" << c << '\t' << "bottom" << d << endl;
+	r1.print();
+	r2 = r1;
+	r2.print(); //对象可整体赋值
+}
+
+//sy9_2
+#include"pch.h"
+#include<iostream>
+using namespace std;
+
+class Date
+{
+	int Year, Month, Day;
+public:
+	Date(int y = 2000, int m = 1, int d = 1)
+	{
+		Year = y; Month = m; Day = d;
+		cout << "Constructor: ";
+		ShowDate(); //类里面，即使函数在之后定义也不需要声明再使用
+	}
+	void ShowDate()
+	{
+		cout << Year << '.' << Month << '.' << Day << endl;
+	}
+	~Date()
+	{
+		cout << "Destructor: ";
+		ShowDate();
+	}
+};
+
+Date d4(2016, 4, 4);
+
+void fun()
+{
+	cout << "进入 fun()函数！\n";
+	static Date d2(2016, 2, 2);
+	Date d3(2016, 3, 3);
+	cout << "退出 fun()函数!\n";
+}
+
+int main(void)
+{
+	cout << "进入 main()函数！\n";
+	Date d1(2016, 1, 1);
+	fun();
+	fun();
+	cout << "退出 main()函数！\n";
+}
+
+//sy9_3
+#include"pch.h"
+#include<iostream>
+#include<string.h>
+using namespace std;
+int main(void)
+{
+	//定义Teacher类
+	class Teacher
+	{
+		char Num[30];
+		char Name[30];
+		char Sex;
+		char Addr[100];
+		char Tel[20];
+		char Email[50];
+		char Headship[30];
+		char Post[30];
+		int Salary;
+	public:
+		void SetNum(char num[])
+		{
+			strcpy_s(Num, 30, num);
+		}
+
+		void SetName(char name[])
+		{
+			strcpy_s(Name, 30, name);
+		}
+
+		void SetSex(char sex)
+		{
+			Sex = sex;
+		}
+
+		void SetAddr(char addr[])
+		{
+			strcpy_s(Addr, 100, addr);
+		}
+
+		void SetTel(char tel[])
+		{
+			strcpy_s(Tel, 20, tel);
+		}
+
+		void SetEmail(char email[])
+		{
+			strcpy_s(Email, 50, email);
+		}
+
+		void SetHeadship(char headship[])
+		{
+			strcpy_s(Headship, 30, headship);
+		}
+
+		void SetPost(char post[])
+		{
+			strcpy_s(Post, 30, post);
+		}
+
+		void SetSalary(int salary)
+		{
+			Salary = salary;
+		}
+
+		void OutputInfo()
+		{
+			cout << "Num: " << Num << endl
+				<< "Name: " << Name << endl
+				<< "Sex: " << Sex << endl
+				<< "Address: " << Addr << endl
+				<< "Tel: " << Tel << endl
+				<< "Email: " << Email << endl
+				<< "Headship: " << Headship << endl
+				<< "Post: " << Post << endl
+				<< "Salary: " << Salary << endl;
+		}
+	}Teacher1;
+
+	//测试函数
+	char Num[30], Name[30], Sex, Addr[100], Tel[20], Email[50], Headship[30], Post[30];
+	int Salary;
+	cout << "input the number >> ";
+	cin.getline(Num, 30);
+	Teacher1.SetNum(Num);
+	cout << endl;
+
+	cout << "input the name >> ";
+	cin.getline(Name, 30);
+	Teacher1.SetName(Name);
+	cout << endl;
+
+	cout << "input the sex(M/F) >> ";
+	cin >> Sex;
+	Teacher1.SetSex(Sex);
+	cout << endl;
+
+	cout << "input the address >> ";
+	cin.ignore(); //1)注意前面的回车，回车导致cin.getline()接收异常
+	cin.getline(Addr, 100);
+	Teacher1.SetAddr(Addr);
+	cout << endl;
+
+	cout << "input the tel >> ";
+	cin.getline(Tel, 20);
+	Teacher1.SetTel(Tel);
+	cout << endl;
+
+	cout << "input the email >> ";
+	cin.getline(Email, 50);
+	Teacher1.SetEmail(Email);
+	cout << endl;
+
+	cout << "input the headship >> ";
+	cin.getline(Headship, 30);
+	Teacher1.SetHeadship(Headship);
+	cout << endl;
+
+	cout << "input the post >> ";
+	cin.getline(Post, 30);
+	Teacher1.SetPost(Post);
+	cout << endl;
+
+	cout << "input the salary >> ";
+	cin >> Salary;
+	Teacher1.SetSalary(Salary);
+	cout << endl;
+
+	Teacher1.OutputInfo();
+}
+
+//zy10_1
+#include"pch.h"
+#include<iostream>
+using namespace std;
+
+//定义一个复数类
+class complex
+{
+	//数据成员
+	double real;
+	double image;
+
+	//成员函数
+	//设置实部
+public:
+	void set_real(double real)
+	{
+		complex::real = real;
+	}
+	//设置虚部
+	void set_image(double image)
+	{
+		complex::image = image;
+	}
+	//取实部
+	double get_real()
+	{
+		return real;
+	}
+	//取虚部
+	double get_image()
+	{
+		return image;
+	}
+	//输出复数
+	void print_complex()
+	{
+		cout << real << " + " << image << "i \n"; //3)' + '用单引号输出乱码-用双引号
+	}
+};
+
+int main(void)
+{
+	//定义complex类对象
+	complex c1;
+
+	double real, image;
+	cout << "input the real part >> ";
+	cin >> real;
+	cout << "input the imaginary part >> ";
+	cin >> image;
+	cout << endl;
+
+	//测试所有成员函数
+	c1.set_real(real); //1)输入时函数名划线-记得加对象名
+	c1.set_image(image);
+	cout << "the real part is " << c1.get_real() << endl;
+	cout << "the imaginary part is " << c1.get_image() << endl;
+	// 2) cout << "复数是：" << c1.print_complex() << endl; 提示错误-直接调用即可
+	cout << "the complex number is ";
+	c1.print_complex();
+
+	return 0;
+}
+
+//zy10_2
+#include"pch.h"
+#include<iostream>
+using namespace std;
+
+//定义Rectangle类
+class Rectangle
+{
+public:
+	void setLength(int l);
+	void setWidth(int w);
+	int getArea();
+private:
+	int length, width;
+};
+void Rectangle::setLength(int l)
+{
+	length = l;
+}
+void Rectangle::setWidth(int w)
+{
+	width = w;
+}
+int Rectangle::getArea()
+{
+	return (length * width);
+}
+
+int main(void)
+{
+	//输出提示信息，接收数据
+	int length, width;
+	cout << "input the length >> ";
+	cin >> length;
+	cout << "input the width >> ";
+	cin >> width;
+	cout << endl;
+
+	//验证成员函数
+	Rectangle r;
+	r.setLength(length);
+	r.setWidth(width);
+	cout << "the length, width of the rectangle is "
+		<< length << ", " << width
+		<< ", and its area is " << r.getArea() << endl;
+
+	return 0;
+}
+
+//对象成员初始化
+#include"pch.h"
+#include<iostream>
+using namespace std;
+
+class A
+{
+	int a;
+public:
+	A(int x = 10)
+	{
+		a = x;
+	}
+	int GetA()
+	{
+		return a;
+	}
+};
+
+class B
+{
+	int b;
+public:
+	B(int x)
+	{
+		b = x;
+	}
+	int GetB()
+	{
+		return b;
+	}
+};
+
+class C
+{
+	int c;
+	A aobj;
+	B bobj;
+public:
+	C(int x, int y, int z) : aobj(y), bobj(z)
+	{
+		c = x;
+	}
+	void Print()
+	{
+		cout << aobj.GetA() << '\t' << bobj.GetB() << '\t' << c << endl;
+	}
+};
+
+int main(void)
+{
+	C cobj(3, 6, 8);
+	cobj.Print();
+	return 0;
+
+	/*
+	在定义一个新类时，可以把一个已定义类的对象作为该类的成员，称为对象成员。产生新定义类的对象时，需对它的对象成员进行初始化，且只能通过其对象成员的构造函数来实现
+	书上有这句话
+	我以为意思是对象成员定义之后要在所在类的构造函数里显式写上对象成员的构造函数。而这题明显和我的想法不符。
+
+	对这题的分析：
+	C类有两个对象成员，aobj和bobj
+	产生新定义类的对象，也就是C类的对象aobj和bobj时，需对这两个对象成员进行初始化。
+	**这里的初始化不一定要在C类的构造函数中把aobj和bobj的构造函数都写上，实际上aobj的构造函数可以不写，但bobj不可以。
+
+	对aobj来说，aobj的构造函数是个缺省构造函数，有缺省值10。
+	如果在C类的构造函数的成员初始化列表中显式写上aobj的构造函数aobj()，aobj就使用这个构造函数的实参进行初始化
+	实际上，如果不在成员初始化列表中写上aobj的构造函数aobj(),在定义aobj的同时，系统自动调用缺省构造函数，把缺省值10赋值给该对象。
+
+	对bobj来说，bobj的构造函数不是一个缺省构造函数，没有缺省值。
+	如果在C类的构造函数的成员初始化列表中显式写上bobj的构造函数bobj()，bobj就使用这个构造函数的实参进行初始化
+	如果不在成员初始化列表中写上bobj的构造函数bobj()，在定义bobj的同时，系统没有可用的构造函数（B类有一个用户自定义的构造函数，而这个构造函数不是
+	缺省构造函数，要求有一个实参，但定义bobj的时候没给实参，又没把bobj的构造函数bobj()写在初始化列表。），编译出错。
+	实际上，在不把bobj对象的构造函数写在初始化列表而又让编译不出错，可以把B类的自定义的构造函数删除。这样，在C类中定义bobj对象的同时，系统自动生成
+	一个缺省构造函数。而因这个自动生成的缺省构造函数不接受参数，系统默认产生一个随机值赋值给bobj，因此输出一个随机值。
+	但是，不能把C类的bobj定义语句即B bobj;写成B bobj(10);。
+	*/
+}
